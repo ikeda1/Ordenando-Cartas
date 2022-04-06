@@ -2,35 +2,61 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-// cliente para classe Fracao
 class Main {
 
-  public static String[] addElement(int n, String arr[], String element){
-    
-    String newArr[] = new String[n+1];
-    for (int i = 0; i < n; i++) 
+  // Adiciona Cartas para um array
+  public static Carta[] addCard(int n, Carta arr[], Carta card) {
+
+    // Cria um novo array de acordo com o tamanho do array antigo + 1
+    Carta newArr[] = new Carta[n+1];
+    // Copia os elementos do array antigo no novo array
+    for (int i = 0; i < n; i++)
       newArr[i] = arr[i];
 
-    newArr[n] = element;
+    // Adiciona o novo elemento na última posição do novo array
+    newArr[n] = card;
     return newArr;
+  }
+
+  // Ordenação das cartas no método de bubble sort
+  public static void bubbleSort(Carta arr[]) {
+    
+    // Dois loops utilizando for para percorrer o vetor
+    for (int i = 0; i < arr.length-1; i++) {
+      for (int j = 0; j < arr.length-i-1; j++) {
+        int result = arr[j].compareCards(arr[j+1]);
+        // Se o termo atual for maior que o próximo, troca as posições entre eles
+        if (result == -1) {
+          Carta tmp = arr[j];
+          arr[j] = arr[j+1];
+          arr[j+1] = tmp;
+        }
+      }
+    } 
   }
 
   public static void main(String[] args) {
 
-    // Leitura do arquivo usando try catch
-    String[] deck = {}; // Array para armazenar as cartas
+    Carta[] deckArr = {}; // Array para armazenar as cartas
 
+    // Leitura do arquivo usando try catch
     try { // Se a leitura ocorrer corretamente
       File myFile = new File("cards.txt");
       Scanner myReader = new Scanner(myFile);
 
       while (myReader.hasNextLine()) {
-        String data = myReader.nextLine();
-        deck = addElement(deck.length, deck, data);
-        // System.out.println(data);
-        // System.out.println(deck.length);
-      }
 
+        String data = myReader.nextLine();
+
+        // Caso seja coringa
+        if (data.toLowerCase().equals("curinga")) 
+          deckArr = addCard(deckArr.length, deckArr, new Carta());
+
+        // Caso seja carta normal
+        else 
+          deckArr = addCard(deckArr.length, deckArr, new Carta(data));
+        }
+        
       myReader.close(); // Fecha o arquivo após a leitura
 
     } catch (FileNotFoundException e) {
@@ -39,24 +65,12 @@ class Main {
       e.printStackTrace();
     }
 
-    // System.out.println(deck.length);
-    Carta c1, c2, c3, c4; // variavel de referencia
-    // System.out.println(deck[0]);
-    c1 = new Carta(deck[0]);
-    System.out.println("c1: " + c1.getCard());
-    c2 = new Carta(deck[1]);
-    System.out.println("c2: " + c2.getCard());
-    c3 = new Carta(deck[2]);
-    System.out.println("c3: " + c3.getCard());
-    c4 = new Carta(deck[3]);
-    System.out.println("c4: " + c4.getCard());
-    
-    // c2 = new Carta("Sete", "Copas");
-    // System.out.println("c2: " + c2.getCard());
-    // c3 = new Carta();
-    // System.out.println("c3: " + c3.getCard());
+    // Ordenando o array de cartas utilizando bubblesort
+    bubbleSort(deckArr);
 
-    // int res = c1.compareCards(c2);
-    // System.out.println(res);
+    // Imprime o array
+    System.out.println("\nArray Ordenado:");
+    for (int x = 0; x < deckArr.length; x++)
+      System.out.println(deckArr[x].getCard());
   }
 }

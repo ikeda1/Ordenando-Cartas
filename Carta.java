@@ -50,12 +50,14 @@ public class Carta {
     }
 
     public String getCard() {
+        // Foi utilizado substrings para garantir que as primeiras letras do valor e naipe sempre sejam maiúsculas, independente de como estiver escrito no arquivo lido.
 
         // Se for um coringa
-        if (this.value.toLowerCase() == "curinga") return "Curinga";
-
-        // Se for uma carta normal
-        else return (this.value + " de " + this.suit);
+        if (this.value.toLowerCase().equals("curinga")) return "Curinga";
+        // Se for uma carta entre 2 e 10
+        else if (getValue() > 1 && getValue() < 11) return getValue() + " de " + this.suit.substring(0, 1).toUpperCase() + this.suit.substring(1).toLowerCase();
+        // Se for um As, Valete, Dama ou Rei
+        else return this.value.substring(0, 1).toUpperCase() + this.value.substring(1).toLowerCase() + " de " + this.suit.substring(0, 1).toUpperCase() + this.suit.substring(1).toLowerCase();
     }
 
     // Compara valor de duas cartas
